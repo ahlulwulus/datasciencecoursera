@@ -1,0 +1,71 @@
+----------------------------------------
+title: "Basic Inferential Data Analysis"
+author: "ahlulwulus"
+date: "November 22, 2015"
+output: html_document
+----------------------------------------
+
+QUESTION (Part 2)
+
+The second portion of the class, we're going to analyze the ToothGrowth data in the R datasets package. Load the ToothGrowth data and perform some basic exploratory data analyses. Provide a basic summary of the data.Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. (Only use the techniques from class, even if there's other approaches worth considering). State your conclusions and the assumptions needed for your conclusions.
+
+SOLUTION
+
+1. Load the ToothGrowth data
+
+```{r}
+library(datasets)
+data(ToothGrowth)
+```
+
+Perform some basic exploratory data analyses
+
+```{r}
+head(ToothGrowth)
+tail(ToothGrowth)
+str(ToothGrowth)
+```
+
+
+2. Provide a basic summary of the data.
+
+```{r}
+ToothGrowth$dose <- as.factor(ToothGrowth$dose)
+table(ToothGrowth$supp, ToothGrowth$dose)
+summary(ToothGrowth)
+mean(ToothGrowth$len)
+sd(ToothGrowth$len)
+```
+
+Loading package ggplot2 for ploting chart
+
+```{r, echo=FALSE}
+require(ggplot2, quietly = TRUE)
+plot <- ggplot(ToothGrowth, aes(x=factor(dose),y=len,fill=factor(dose)))
+plot + geom_boxplot(notch=F) + facet_grid(.~supp) +
+     scale_x_discrete("Dosage (Milligram)") +   
+     scale_y_continuous("Length of Teeth") +  
+     ggtitle("Effect of Dosage and Supplement Type on Tooth Growth")
+```
+
+3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose.
+
+```{r}
+supp.t1 <- t.test(len~supp, paired=F, var.equal=T, data=ToothGrowth)
+supp.t2 <- t.test(len~supp, paired=F, var.equal=F, data=ToothGrowth)
+supp.result <- data.frame("p-value"=c(supp.t1$p.value, supp.t2$p.value),
+                          "Conf-Low"=c(supp.t1$conf[1],supp.t2$conf[1]),
+                          "Conf-High"=c(supp.t1$conf[2],supp.t2$conf[2]),
+                          row.names=c("Equal Var","Unequal Var"))
+supp.result
+```
+
+
+4. State your conclusions and the assumptions needed for your conclusions.
+
+Based on the sample data provided:
+1. At lower dosages (0.5 Mg - 1 Mg), orange juice provides more tooth growth than ascorbic acid.
+2. At the higher dosage (2 Mg), the rate of tooth growth is not different (statistically) between supplement methods.
+3. Regardless of the supplement method, dosage is a key factor in tooth growth.
+
+END OF THE SOLUTION.
