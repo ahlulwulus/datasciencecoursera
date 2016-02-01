@@ -15,43 +15,56 @@ Data Cleaning
 The data for this project come was obteined from http://groupware.les.inf.puc-rio.br/har. Two data set were available a training set and a test set for which 20 individuals without any classification for the class of exercise was available.
 
 #Data loading
-setwd("~/Desktop/coursera/R_courses/machine_learning")
+```{r}
+setwd("D:/Ahlulwulus/Training/Data Scientist 2015/Module 8 - Practical Machine Learning/Assignment")
 pmlTrain<-read.csv("pml-training.csv", header=T, na.strings=c("NA", "#DIV/0!"))
 pmlTest<-read.csv("pml-testing.csv", header=T, na.string=c("NA", "#DIV/0!"))
+```
 Training data was partitioned and preprocessed using the code described below. In brief, all variables with at least one "NA" were excluded from the analysis. Variables related to time and user information were excluded for a total of 51 variables and 19622 class measurements. Same variables were mainteined in the test data set (Validation dataset) to be used for predicting the 20 test cases provided.
 
 ## NA exclusion for all available variables
+```{r}
 noNApmlTrain<-pmlTrain[, apply(pmlTrain, 2, function(x) !any(is.na(x)))] 
 dim(noNApmlTrain)
+```
 ## [1] 19622    60
 ## variables with user information, time and undefined
+```{r}
 cleanpmlTrain<-noNApmlTrain[,-c(1:8)]
 dim(cleanpmlTrain)
+```
 ## [1] 19622    52
 ## 20 test cases provided clean info - Validation data set
+```{r}
 cleanpmltest<-pmlTest[,names(cleanpmlTrain[,-52])]
 dim(cleanpmltest)
+```
 ## [1] 20 51
 Data Partitioning and Prediction Process
 The cleaned downloaded data set was subset in order to generate a test set independent from the 20 cases provided set. Partitioning was performed to obtain a 75% training set and a 25% test set.
 
 #data cleaning
+```{r}
 library(caret)
 inTrain<-createDataPartition(y=cleanpmlTrain$classe, p=0.75,list=F)
 training<-cleanpmlTrain[inTrain,] 
 test<-cleanpmlTrain[-inTrain,] 
+
 #Training and test set dimensions
 dim(training)
 ## [1] 14718    52
 dim(test)
 ## [1] 4904   52
+```
 Results and Conclusions
 Random forest trees were generated for the training dataset using cross-validation. Then the generated algorithm was examnined under the partitioned training set to examine the accuracy and estimated error of prediction. By using 51 predictors for five classes using cross-validation at a 5-fold an accuracy of 99.2% with a 95% CI [0.989-0.994] was achieved accompanied by a Kappa value of 0.99.
 
+```{r}
 library(caret)
 set.seed(13333)
 fitControl2<-trainControl(method="cv", number=5, allowParallel=T, verbose=T)
 rffit<-train(classe~.,data=training, method="rf", trControl=fitControl2, verbose=F)
+```
 ## + Fold1: mtry= 2 
 ## - Fold1: mtry= 2 
 ## + Fold1: mtry=26 
@@ -85,8 +98,10 @@ rffit<-train(classe~.,data=training, method="rf", trControl=fitControl2, verbose
 ## Aggregating results
 ## Selecting tuning parameters
 ## Fitting mtry = 26 on full training set
+```{r}
 predrf<-predict(rffit, newdata=test)
 confusionMatrix(predrf, test$classe)
+```
 ## Confusion Matrix and Statistics
 ## 
 ##           Reference
@@ -118,13 +133,18 @@ confusionMatrix(predrf, test$classe)
 ## Detection Rate          0.284    0.191    0.173    0.162    0.183
 ## Detection Prevalence    0.285    0.192    0.175    0.164    0.184
 ## Balanced Accuracy       0.999    0.994    0.994    0.994    0.998
+```{r}
 pred20<-predict(rffit, newdata=cleanpmltest)
+```
 # Output for the prediction of the 20 cases provided
+```{r}
 pred20
+```
 ##  [1] B A B A A E D B A A B C B A E E A B B B
 ## Levels: A B C D E
 A boosting algorithm was also run to confirm and be able to compare predictions. Data is not shown but the boosting approach presented less accuracy (96%) (Data not shown). However, when the predictions for the 20 test cases were compared match was same for both ran algorimths.
 
+```{r}
 fitControl2<-trainControl(method="cv", number=5, allowParallel=T, verbose=T)
 gmbfit<-train(classe~.,data=training, method="gbm", trControl=fitControl2, verbose=F)
 gmbfit$finalModel
@@ -135,8 +155,10 @@ predtrain<-predict(gmbfit, newdata=training)
 confusionMatrix(predtrain, training$classe)
 predtrain<-predict(gmbfit, newdata=training)
 confusionMatrix(predtrain, training$classe)
+```
 Once, the predictions were obtained for the 20 test cases provided, the below shown script was used to obtain single text files to be uploaded to the courses web site to comply with the submission assigment. 20 out of 20 hits also confirmed the accuracy of the obtained models.
 
+```{r}
 getwd()
 pml_write_files = function(x){
   n = length(x)
@@ -146,3 +168,5 @@ pml_write_files = function(x){
   }
 }
 pml_write_files(pred20)
+```
+END of JOB
