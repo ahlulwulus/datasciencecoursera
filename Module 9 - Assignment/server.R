@@ -140,11 +140,11 @@ BMITrend<-function(ccode){
         return(temp)
 }
 USStatesPlot<-function(ccode,state){
-        if (ccode=="USA") temp<-subset(USStatesData,USStatesData$State==state)
+        if (ccode=="MYS") temp<-subset(USStatesData,USStatesData$State==state)
         else temp<-subset(USStatesData,USStatesData$State=="XXX")
         return(temp)                
 }
 USStatesLabel<-function(ccode,state){
-        if (ccode=="USA") return(state)
+        if (ccode=="MYS") return(state)
         else return("")                
 }

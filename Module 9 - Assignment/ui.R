@@ -6,19 +6,20 @@ library(ISOcodes)
 data(ISO_3166_1)
 
 # The Interfaces
-shinyUI(pageWithSidebar(
+#shinyUI(pageWithSidebar(theme = "bootstrap.css",
+shinyUI(fluidPage(theme = "bootstrap.css",
 headerPanel("Body Mass Index (BMI)"),
 sidebarPanel(numericInput(inputId="heightM", label="Your height in cm", value= 0,min=0),
              numericInput(inputId="weightM", label="Your weight in kg", value= 0,min=0),
              radioButtons(inputId="gender", label="Gender", choices=c("Male", "Female")),
              selectInput(inputId="country", label="Country", choices=sort(ISO_3166_1$Alpha_3),
              multiple = FALSE,selected="MYS"),
-             conditionalPanel(condition = "input.country == 'USA'",
+             conditionalPanel(condition = "input.country == 'MYS'",
                         p("If you live in USA, please choose a state"),
                         selectInput(inputId="state", label="State", choices=state.name,
                         multiple = FALSE,selected=NULL)), actionButton("goButton", "GO!"), br(), 
                         br(), p(strong(em("Documentation:",a("Body Mass Index BMI)",href="READMe.html")))),
-                        p(strong(em("Github repository:",a("Peer Assessment for Shiny Apps Assignment",href="https://github.com/ahlulwulus/datasciencecoursera/tree/master/Module%209%20-%20Assignment"))))),
+                        p(strong(em("Github repository:",a("Peer Assessment for Shiny Apps Assignment",href="https://github.com/ahlulwulus/datasciencecoursera/tree/master/Module%209%20-%20Assignment")))),width = 3),
 mainPanel(tabsetPanel(tabPanel('Your results',
                       h5('Your BMI coefficient kg/m^2'),
                       verbatimTextOutput("oiBMI"),
@@ -52,11 +53,11 @@ tabPanel('Plot: Mean BMI Trend',
                                  p("Source: ", a("WHO Global Health Observatory Data Repository", 
                                                  href = "http://apps.who.int/gho/data/node.main.A903?lang=en"))
                                  ),
-tabPanel('Plot: BMI Indicators for US States',
-                                 h5('2012 US States BMI Indicators for Adults '),
+tabPanel('Plot: BMI for Malaysian',
+                                 h5('2012 Malaysian BMI Indicators'),
                                  verbatimTextOutput("oiState"),
                                  showOutput("Plot3","highcharts"),
-                                 p("US States Data: ", a("CDC-Behavioral Risk Factor Surveillance System; Prevalence and Trends Data; Overweight and Obesity(BMI) 2012", href = "http://apps.nccd.cdc.gov/brfss/list.asp?cat=OB&yr=2012&qkey=8261&state=All"))
+                                 p("Malaysia Data: ", a("CDC-Behavioral Risk Factor Surveillance System; Prevalence and Trends Data; Overweight and Obesity(BMI) 2012", href = "http://apps.nccd.cdc.gov/brfss/list.asp?cat=OB&yr=2012&qkey=8261&state=All"))
                                  )
                 ),
 p(strong("Don't Leave Home Without Personal medical record - http://www.womenshealthmag.com/"))
