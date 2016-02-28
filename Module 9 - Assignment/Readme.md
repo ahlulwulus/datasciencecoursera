@@ -28,5 +28,4 @@ Although BMI values are age-independent and same for both sexes for adults, the 
 4. **Plot:Mean BMI trend** plot(rCharts) of the trend of mean BMI crude estimates for both genders in time. Data originate from WHO Global Health Observatory Data Repository. If there are no data available for selected country, the plot is not populated.  
 5. **Plot:BMI Indicators for US States** If USA of America is selected as country, then respectively the selected state in USA this tab is populated with bar plot(rCharts) of 2012 BMI indicators for adults for selected state. Data used for this section originate from [CDC-Behavioral Risk Factor Surveillance System; Prevalence and Trends Data; Overweight and Obesity-BMI 2012](http://apps.nccd.cdc.gov/brfss/list.asp?cat=OB&yr=2012&qkey=8261&state=All).
   
-All three datasets are available for free download and were downloaded 10 June,2014. Stay healthy and excercize more!  
-Feel free to send me your comments,questions or report bugs [mywulus@gmail.com].
+All three datasets are available for free download and were downloaded on 28 February, 2016. Feel free to send me your comments,questions or report bugs [mywulus@gmail.com].
